@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Granite Form to Clipboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 14px; /* Reduced font size */
+        }
+        form {
+            max-width: 500px; /* Reduced form width */
+            margin: 0 auto;
+        }
+        label {
+            display: block;
+            margin-bottom: 3px; /* Reduced margin */
+        }
+        input[type="text"],
+        input[type="tel"],
+        input[type="email"],
+		textarea,
+        select {
+            width: 100%;
+            padding: 4px; /* Reduced padding */
+            margin-bottom: 8px; /* Reduced margin */
+            box-sizing: border-box;
+        }
+        button {
+            padding: 8px 16px; /* Reduced padding */
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .checkbox-container {
+            display: flex;
+            flex-wrap: wrap;
+        }
+        .checkbox-container label {
+            margin-right: 10px;
+        }
+		header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Granite Template to Clipboard</h1>
+    </header>
+    <form id="myForm">
+        <label for="accountNumber">Account #:</label>
+        <input type="text" id="accountNumber" name="Account Number">
+        
+        <label for="serviceId">Phone No/Service/Circuit ID:</label>
+        <input type="text" id="serviceId" name="Service Id">
+        
+        <label for="issue">Description of Issue:</label>
+        <textarea id="issue" name="Description of Issue"></textarea>
+        
+        <label for="address">Store Address:</label>
+        <textarea id="address" name="Store Address"></textarea>
+        
+        <label for="openingHours">Opening Hrs:</label>
+        <textarea id="openingHours" name="Store Trading Hours"></textarea>
+		
+		<label for="contactName">Contact Name:</label>
+        <input type="text" id="contactName" name="Store Contact">
+        
+        <label for="contactTel">Contact Tel:</label>
+        <input type="tel" id="contactTel" name="Store Contact Tel">
+        
+        <label for="ourRef">Our Assyst #:</label>
+        <input type="text" id="ourRef" name="Our Ref #">
+        
+        <label for="troubleShooting">Trouble Shooting Completed:</label>
+        <textarea id="troubleShooting" name="Trouble Shooting Completed"></textarea>
+        
+        <label for="modemModel">Modem Model:</label>
+        <select id="modemModel" name="Modem Model">
+            <option value="N/A">N/A</option>
+            <option value="E300-5G">E300-5G</option>
+            <option value="W1850-5G">W1850-5G</option>
+            <option value="L950 LTE">L950 LTE</option>
+            <option value="IBR650C LTE">IBR650C LTE</option>
+        </select>
+        
+        <label for="Status_LEDs">Modem LED Status:</label>
+        <div class="checkbox-container">
+            <input type="checkbox" id="power" name="Status_LEDs" value="Power">
+            <label for="power">Power</label>
+            <input type="checkbox" id="Offline" name="Status_LEDs" value="Offline">
+            <label for="Offline">Offline</label>
+            <input type="checkbox" id="Carrier Rejected" name="Status_LEDs" value="Carrier Rejected">
+            <label for="CarrierR">Carrier Rejected</label>
+            <input type="checkbox" id="Carrier Connected" name="Status_LEDs" value="Carrier Connected">
+            <label for="CarrierC">Carrier Connected</label>
+        </div>
+        
+        <label for="cabling">Describe cables plugged into Modem/Cradle Point and where they Go:</label>
+        <textarea id="cabling" name="cabling"></textarea>
+        
+        <button type="button" onclick="copyToClipboard()">Copy to Clipboard</button>
+		<button type="refresh">Reset Form</button> <!-- Added reset button -->
+    </form>
+	
+    <div class="info-link">
+        <a href="https://grid-wtct.enterprise.slack.com/lists/T02U8BZMG/F089KLWMQK1" target="_blank">Click here for additional Granite information</a>
+    </div>
+	
+    <script>
+        function copyToClipboard() {
+            const form = document.getElementById('myForm');
+            const formData = new FormData(form);
+            let result = '';
+            for (let [key, value] of formData.entries()) {
+                if (key === 'Status_LEDs') {
+                    result += `${key}: ${value}\n`;
+                } else {
+                    result += `${key}: ${value}\n`;
+                }
+            }
+            navigator.clipboard.writeText(result).then(() => {
+                alert('Form data copied to clipboard!');
+            }).catch(err => {
+                console.error('Failed to copy: ', err);
+            });
+        }
+    </script>
+</body>
+</html>
