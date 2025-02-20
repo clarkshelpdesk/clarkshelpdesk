@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Storetech Form to Clipboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 14px; /* Reduced font size */
+        }
+        form {
+            max-width: 600px; /* Reduced form width */
+            margin: 0 auto;
+        }
+        label {
+            display: block;
+            margin-bottom: 3px; /* Reduced margin */
+        }
+        input[type="text"],
+        input[type="tel"],
+        input[type="email"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 4px; /* Reduced padding */
+            margin-bottom: 8px; /* Reduced margin */
+            box-sizing: border-box;
+        }
+        button {
+            padding: 8px 16px; /* Reduced padding */
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .checkbox-container {
+            display: flex;
+            flex-wrap: wrap;
+        }
+        .checkbox-container label {
+            margin-right: 10px;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .empty-field {
+            background-color: #d3d3d3; /* Grey background for empty fields */
+        }
+        .sample-data {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Storetech Template to Clipboard</h1>
+    </header>
+    <form id="myForm">
+        <label for="DevCheck1">Check Clarks Sharepoint site (under 'Storetech Config') to see what equipment is installed:</label>
+        <select id="DevCheck1" name="Checked equipment installed">
+            <option value="N/A">N/A</option>
+            <option value="NO">NO</option>
+            <option value="YES">YES</option>
+        </select>
+        
+        <label for="DevCheck2">Cameras: Are all visible & with no obstructions?<br>(Any stands/gondolas underneath the devices can pick up counts from customers browsing):</label>
+        <select id="DevCheck2" name="Any obstructions">
+            <option value="N/A">N/A</option>
+            <option value="NO">NO</option>
+            <option value="YES">YES</option>
+        </select>
+        
+        <label for="DevCheck3">Can you see any lights flashing on the cameras when someone walks underneath them<br>(green light flashes when walk underneath camera):</label>
+        <select id="DevCheck3" name="Any lights flashing">
+            <option value="N/A">N/A</option>
+            <option value="NO">NO</option>
+            <option value="YES">YES</option>
+        </select>
+        
+        <label for="DevCheck4">(Where installed) Check and reseat all Power Injector cables (where used).<br>Confirm power light on injector and port light on switch.<br>NOTE: Reseating CAT5 camera cable to Injector will reboot the camera, but this will lose the current stored count. reset cables to power injector (where used):</label>
+        <select id="DevCheck4" name="(Where installed) Check and reseat all Power Injector cables">
+            <option value="N/A">N/A</option>
+            <option value="NO">NO</option>
+            <option value="YES">YES</option>
+        </select>
+        
+        <label for="DevCheck5">Check the connection to the switch (Some stores will have a Power Injector, others will be direct into PoE switch port):</label>
+        <select id="DevCheck5" name="Check the connection to the switch">
+            <option value="N/A">N/A</option>
+            <option value="NO">NO</option>
+            <option value="YES">YES</option>
+        </select>
+        
+        <label for="DevCheck6">Has the store carried out three consecutive manual counts (counting OUT)<br>(3 * 30 MINS, date/times and visitors counted):</label>
+        <select id="DevCheck6" name="Manual counts completed">
+            <option value="N/A">N/A</option>
+            <option value="NO">NO</option>
+            <option value="YES">YES</option>
+        </select>
+
+        <label for="DevCheck7">Has the store had any Tradesmen in the store? If YES for what reason:</label>
+        <select id="DevCheck7" name="Any Tradesmen">
+            <option value="N/A">N/A</option>
+            <option value="NO">NO</option>
+            <option value="YES">YES</option>
+        </select>
+
+        <label for="sname">Name of user reporting the discrepancy:</label>
+        <input type="text" id="sname" name="Discrepancy reported by">
+        
+        <label for="oh1">Opening Hours SAT:</label>
+        <input type="text" id="oh1" name="SATURDAY">
+        
+        <label for="oh2">Opening Hours SUN:</label>
+        <input type="text" id="oh2" name="SUNDAY">
+        
+        <label for="oh3">Opening Hours MON - FRI:</label>
+        <input type="text" id="oh3" name="MON - FRI">
+        
+        <label for="ourRef">Assyst Ref #:</label>
+        <input type="text" id="ourRef" name="EPOS Ref">
+
+        <label for="sname">Store Code-Name:</label>
+        <input type="text" id="sname" name="Store Code-Name">
+        
+        <label for="completedBy">Please reply with reference to:</label>
+        <input type="text" id="completedBy" name="Please reply with reference to" readonly>
+        
+        <button type="button" onclick="copyToClipboard()">Copy to Clipboard</button>
+        <button type="button" onclick="toggleSampleData()">Toggle Sample Data</button>
+        <button type="refresh">Reset Form</button> 
+    </form>
+    
+    <div class="info-link">
+        <a href="https://grid-wtct.enterprise.slack.com/lists/T02U8BZMG/F089KLWMQK1" target="_blank">Click here for additional Granite information</a>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            // Automatically fill in the name of the person completing the form
+            const userName = 'EPOS@clarks.com'; // Replace with the actual method to get the user's name
+            document.getElementById('completedBy').value = userName;
+
+            // Check all text fields and apply grey background if empty
+            const textFields = document.querySelectorAll('input[type="text"]');
+            textFields.forEach(field => {
+                if (field.value.trim() === '') {
+                    field.classList.add('empty-field');
+                }
+                field.addEventListener('input', () => {
+                    if (field.value.trim() === '') {
+                        field.classList.add('empty-field');
+                    } else {
+                        field.classList.remove('empty-field');
+                    }
+                });
+            });
+        });
+
+        function copyToClipboard() {
+            const form = document.getElementById('myForm');
+            const formData = new FormData(form);
+            let result = '';
+            for (let [key, value] of formData.entries()) {
+                result += `${key}: ${value}\n`;
+            }
+            navigator.clipboard.writeText(result).then(() => {
+                alert('Form data copied to clipboard!');
+            }).catch(err => {
+                console.error('Failed to copy: ', err);
+            });
+        }
+
+        function toggleSampleData() {
+            const sampleData = {
+                "Checked equipment installed": "YES",
+                "Any obstructions": "NO",
+                "Any lights flashing": "YES",
+                "(Where installed) Check and reseat all Power Injector cables": "YES",
+                "Check the connection to the switch": "YES",
+                "Manual counts completed": "YES",
+                "Any Tradesmen": "NO",
+                "Discrepancy reported by": "John Doe",
+                "SATURDAY": "09:00 - 18:00",
+                "SUNDAY": "10:00 - 16:00",
+                "MON - FRI": "09:00 - 20:00",
+                "EPOS Ref": "123456",
+                "Store Code-Name": "1234 - Street",
+                "Please reply with reference to": "EPOS@clarks.com"
+            };
+
+            const form = document.getElementById('myForm');
+            const formData = new FormData(form);
+            let isSampleDataVisible = formData.get('Checked equipment installed') === sampleData["Checked equipment installed"];
+
+            for (let key in sampleData) {
+                const element = form.querySelector(`[name="${key}"]`);
+                if (element) {
+                    element.value = isSampleDataVisible ? '' : sampleData[key];
+                }
+            }
+        }
+    </script>
+</body>
+</html>

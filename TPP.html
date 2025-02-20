@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TPP Template to Clipboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 14px; /* Reduced font size */
+        }
+        form {
+            max-width: 500px; /* Reduced form width */
+            margin: 0 auto;
+        }
+        label {
+            display: block;
+            margin-bottom: 3px; /* Reduced margin */
+        }
+        input[type="text"],
+        input[type="tel"],
+        input[type="email"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 4px; /* Reduced padding */
+            margin-bottom: 8px; /* Reduced margin */
+            box-sizing: border-box;
+        }
+        button {
+            padding: 8px 16px; /* Reduced padding */
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .checkbox-container {
+            display: flex;
+            flex-wrap: wrap;
+        }
+        .checkbox-container label {
+            margin-right: 10px;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .empty-field {
+            background-color: #d3d3d3; /* Grey background for empty fields */
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>TTP Template to Clipboard</h1>
+    </header>
+    <form id="myForm">
+        <label for="sname">"Store Number and Name: (Example 7775 - Porto PT)"</label>
+        <input type="text" id="sname" name="Store Number & Name">
+        
+        <label for="address">Store Address:</label>
+        <textarea id="address" name="Store Address"></textarea>
+        
+        <label for="openingHours">Opening Hrs:</label>
+        <textarea id="openingHours" name="Store Trading Hours"></textarea>
+        
+        <label for="contactName">Contact Name:</label>
+        <input type="text" id="contactName" name="Store Contact">
+        
+        <label for="contactTel">Contact Tel:</label>
+        <input type="tel" id="contactTel" name="Store Contact Tel">    
+        
+        <label for="Model">Scanner or Printer Issue:</label>
+        <select id="Model" name="Scanner or Printer Issue">
+            <option value="Not_Selected">Please Select</option>
+            <option value="scanner">SCANNER</option>
+            <option value="printer">PRINTER</option>
+        </select>
+        
+        <label for="serialno">Serial No:</label>
+        <input type="text" id="serialno" name="Serial No">
+        
+        <label for="issue">Description of Issue:</label>
+        <textarea id="issue" name="Description of Issue"></textarea>
+        
+        <label for="troubleShooting">Trouble Shooting Completed:</label>
+        <textarea id="troubleShooting" name="Trouble Shooting Completed"></textarea>
+        
+        <label for="comments">Any Other Comments:</label>
+        <textarea id="comments" name="Any Other Comments"></textarea>
+        
+        <label for="completedBy">Fault Logged By:</label>
+        <input type="text" id="completedBy" name="Fault Logged By" readonly>
+        
+        <button type="button" onclick="copyToClipboard()">Copy to Clipboard</button>
+        <button type="button" onclick="toggleSampleData()">Toggle Sample Data</button> <!-- Added toggle button -->
+        <button type="refresh">Reset Form</button> <!-- Added reset button -->
+    </form>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            // Automatically fill in the name of the person completing the form
+            const userName = 'Epos@clarks.com'; // Replace with the actual method to get the user's name
+            document.getElementById('completedBy').value = userName;
+            // Check all text fields and text areas and apply grey background if empty
+            const fields = document.querySelectorAll('input[type="text"],input[type="tel"], textarea');
+            fields.forEach(field => {
+                if (field.value.trim() === '') {
+                    field.classList.add('empty-field');
+                }
+                field.addEventListener('input', () => {
+                    if (field.value.trim() === '') {
+                        field.classList.add('empty-field');
+                    } else {
+                        field.classList.remove('empty-field');
+                    }
+                });
+            });
+        });
+
+        function copyToClipboard() {
+            const form = document.getElementById('myForm');
+            const formData = new FormData(form);
+            let result = '';
+            for (let [key, value] of formData.entries()) {
+                if (key === 'modemLedStatus') {
+                    result += `${key}: ${value}\n`;
+                } else {
+                    result += `${key}: ${value}\n`;
+                }
+            }
+            navigator.clipboard.writeText(result).then(() => {
+                alert('Form data copied to clipboard!');
+            }).catch(err => {
+                console.error('Failed to copy: ', err);
+            });
+        }
+
+        function toggleSampleData() {
+            const sampleData = {
+                sname: '7775 - Porto PT',
+                address: '123 Main St, Porto, PT',
+                openingHours: 'Mon-Fri: 9am - 6pm',
+                contactName: 'John Doe',
+                contactTel: '123-456-7890',
+                Model: 'scanner',
+                serialno: 'SN123456789',
+                issue: 'Scanner not working',
+                troubleShooting: 'Checked connections, restarted device',
+                comments: 'Needs urgent attention'
+            };
+            const fields = document.querySelectorAll('input[type="text"],input[type="tel"], textarea, select');
+            fields.forEach(field => {
+                if (field.value.trim() === '') {
+                    field.value = sampleData[field.id] || '';
+                } else {
+                    field.value = '';
+                }
+            });
+        }
+    </script>
+</body>
+</html>
